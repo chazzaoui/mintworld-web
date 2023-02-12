@@ -5,6 +5,7 @@ import styles from '@/styles/Home.module.css';
 import PokemonCard from '@/components/card';
 import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence, AnimateSharedLayout } from 'framer-motion';
+import BiggerCard from '@/components/BiggerCard';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,18 +22,6 @@ export default function Home() {
   ]);
   const [selectedId, setSelectedId] = useState(null);
 
-  const variants = {
-    visible: {
-      scale: 1.1,
-      boxShadow: '10px 10px 0 rgba(0, 0, 0, 0.2)',
-      y: -50,
-      x: -100,
-      cursor: 'pointer',
-      transition: { duration: 1, type: 'spring' }
-    },
-    hidden: { scale: 1, opacity: 0 }
-  };
-
   return (
     <>
       <Head>
@@ -41,51 +30,32 @@ export default function Home() {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <main
-        className={styles.main}
-        onClick={selectedId ? () => setSelectedId('') : null}
-      >
-        {nfts.length > 0
-          ? nfts.map(item => (
-              <AnimateSharedLayout type='crossfade'>
-                <AnimatePresence exitBeforeEnter>
-                  {item !== selectedId ? (
-                    <PokemonCard
-                      key={`${item}`}
-                      cardId={item}
-                      shouldHover={!selectedId ? true : false}
-                      url={item}
-                    />
-                  ) : null}
-                </AnimatePresence>
-              </AnimateSharedLayout>
-            ))
-          : null}
-        <AnimatePresence>
-          {selectedId ? (
-            <>
-              <motion.div
-                className='card '
-                style={{
-                  position: 'fixed',
-                  top: '50%',
-                  left: '50%',
-                  bottom: '50%',
-                  right: '50%'
-                }}
-                onClick={() => {
-                  setSelectedId('');
-                }}
-                variants={variants}
-                animate={selectedId ? 'visible' : 'hidden'}
-                exit={{ scale: 1, opacity: 0 }}
-              >
-                <PokemonCard shouldHover={true} url={selectedId} />
-              </motion.div>
-            </>
-          ) : null}
-        </AnimatePresence>
-      </main>
+      <AnimateSharedLayout type='crossfade'>
+        <main className={styles.main}>
+          {nfts.length > 0
+            ? nfts.map(item => (
+                <div onClick={() => setSelectedId(item)}>
+                  <PokemonCard
+                    key={`${item}`}
+                    cardId={item}
+                    shouldHover={!selectedId ? true : false}
+                    url={item}
+                  />
+                </div>
+              ))
+            : null}
+          <AnimatePresence>
+            {selectedId ? (
+              <BiggerCard
+                onClick={setSelectedId}
+                id={selectedId}
+                shouldHover={true}
+                url={selectedId}
+              />
+            ) : null}
+          </AnimatePresence>
+        </main>
+      </AnimateSharedLayout>
     </>
   );
 }

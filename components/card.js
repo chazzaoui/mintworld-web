@@ -25,20 +25,13 @@ const Card = ({ url, shouldHover, cardId, ...props }) => {
     y.set(event.clientY - rect.top);
   }
 
-  const handleClick = () => {
-    animate(x, 200);
-    animate(y, 200);
-    controls.start({
-      rotateY: [0, 360],
-      transition: { duration: 2 }
-    });
-  };
-
   return (
     <motion.div
+      layout
+      layoutId={'card' + cardId}
       style={{
         width: 250,
-        height: 400,
+        height: 250,
         display: 'flex',
         placeItems: 'center',
         placeContent: 'center',
@@ -48,18 +41,21 @@ const Card = ({ url, shouldHover, cardId, ...props }) => {
         perspective: 400,
         transformStyle: 'preserve-3d'
       }}
-      onMouseMove={shouldHover ? handleMouse : null}
+      onMouseMove={handleMouse}
       onMouseLeave={() => {
-        animate(x, 200);
-        animate(y, 200);
+        animate(x, 200, {
+          duration: 2
+        });
+        animate(y, 200, {
+          duration: 2
+        });
       }}
-      onClick={handleClick}
       animate={controls}
     >
       <motion.div
         style={{
           width: 250,
-          height: 400,
+          height: 250,
           borderRadius: 30,
           backgroundColor: 'red',
           backgroundImage: `url(${url})`,
